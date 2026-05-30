@@ -14,6 +14,7 @@ const generateAndRefreshTokens = async (userId) => {
         await user.save({ validateBeforeSave: false });
         return { accessToken, refreshToken }
     } catch (error) {
+        console.error("Actual token generation error:", error);
         throw new ApiError(500, "Failed to generate tokens")
     }
 }
@@ -81,8 +82,8 @@ const loginUser = asyncHandler(async (req, res) => {
     // save refresh token in database
     // send cookies
     const { username, email, password } = req.body;
-    if (!username || !email) {
-        throw new ApiError(400, "Username and email are required")
+    if (!username && !email) {
+        throw new ApiError(400, "Username or email is required")
     }
     const user = await User.findOne({
         $or: [{ username }, { email }]
