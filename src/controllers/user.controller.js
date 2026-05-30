@@ -4,6 +4,7 @@ import { User } from "../modles/user.model.js";
 import uploadToCloudinary from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
+import oldImageDeleted from "../utils/oldImageDeleted.js";
 
 const generateAndRefreshTokens = async (userId) => {
     try {
@@ -171,13 +172,19 @@ const updateAccountDetails = asyncHandler(async (req,res)=>{
 })
 const updateUserAvatar = asyncHandler(async(req,res)=>{
     const avatarLocalPath = req.file?.path;
+    
     if (!avatarLocalPath) {
         throw new ApiError(404, "Avatar image is required")
     }
+
+    // Capture old avatar URL before updating the DB
+    const oldAvatarUrl = req.user?.avatar;
+
     const avatarUrl = await uploadToCloudinary(avatarLocalPath);
     if (!avatarUrl) {
         throw new ApiError(500, "Failed to upload avatar to cloudinary")
     }
+    
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
@@ -187,13 +194,24 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
         },
         { new: true }
     ).select("-password");
+
+    // Delete the old avatar from Cloudinary after successful update
+    if (oldAvatarUrl) {
+        await oldImageDeleted(oldAvatarUrl);
+    }
+
     return res.status(200).json(new ApiResponse(200, { user }, "User avatar updated successfully"))
 })
 const updateUserCoverImage = asyncHandler(async(req,res)=>{
     const coverImageLocalPath = req.file?.path;
+     
     if (!coverImageLocalPath) {
         throw new ApiError(404, "Cover image is required")
     }
+
+    // Capture old cover image URL before updating the DB
+    const oldCoverImageUrl = req.user?.coverImage;
+   
     const coverImageUrl = await uploadToCloudinary(coverImageLocalPath);
     if (!coverImageUrl) {
         throw new ApiError(500, "Failed to upload cover image to cloudinary")
@@ -207,6 +225,71 @@ const updateUserCoverImage = asyncHandler(async(req,res)=>{
         },
         { new: true }
     ).select("-password");
+
+    // Delete the old cover image from Cloudinary after successful update
+    if (oldCoverImageUrl) {
+        await oldImageDeleted(oldCoverImageUrl);
+    }
+
     return res.status(200).json(new ApiResponse(200, { user }, "User cover image updated successfully"))
 })
-export { registerUser, loginUser, logoutUser, refreshAccessToken, changePassword, getCurrentUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage }
+const getUserChannelProfile = asyncHandler(async(req,res)=>{
+const {username} = req.params;
+if(!username?.trim()){
+    throw new ApiError(400, "Username is required")
+}
+const channel = await User.aggregate([
+    {
+        $match:{
+            username: username?.toLowerCase()
+        }
+    },
+    {
+        $lookup: {
+            from: "subscriptions",
+            localField: "_id",
+            foreignField: "channel",
+            as: "subscribers"
+        }
+    },
+    {
+        $lookup:{
+            from: "subscriptions",
+            localfield: "_id",
+            foreignField: "subscriber",
+            as: "subscribeToChannels"
+        }
+    },
+    {
+        $addFields: {
+            subscribersCount:{$size: "$subscribers"},
+            subscribedChannelsCount: {$size: "$subscribeToChannels"},
+            isSubscribed:{
+                $cond:{
+                    if: {$in: [req.user?._id,"$subscribers.subscriber"]},
+                    then: true,
+                    else: false
+
+                }
+            }
+        }
+    },
+    {
+        $project:{
+            fullName: 1,
+            username: 1,
+            avatar: 1,
+            coverImage: 1,
+            subscribersCount: 1,
+            subscribedChannelsCount: 1,
+            isSubscribed: 1,
+            email: 1,
+        }
+    }
+])
+if(!channel || channel.length === 0){
+    throw new ApiError(404, "Channel not found with this username");
+}
+return res.status(200).json(new ApiResponse(200, {channel: channel[0]}, "Channel profile fetched successfully"))
+})
+export { registerUser, loginUser, logoutUser, refreshAccessToken, changePassword, getCurrentUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage, getUserChannelProfile }
