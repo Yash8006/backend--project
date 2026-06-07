@@ -1,0 +1,84 @@
+.home-error {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px; background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: var(--radius-md);
+  color: var(--red); margin-bottom: 24px;
+}
+
+.home-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px;
+  padding: 80px 20px; text-align: center;
+}
+.empty-icon { font-size: 56px; line-height: 1; filter: grayscale(0.3); }
+.home-empty h2 { font-size: 20px; font-weight: 700; }
+
+.home-load-more {
+  display: flex; justify-content: center;
+  margin-top: 40px;
+}
+
+/* ─── YouTube Open Button ───────────────────────────────────────────── */
+.yt-open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 0, 0, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 0, 0, 0.35);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+  text-decoration: none;
+}
+.yt-open-btn:hover {
+  background: rgba(255, 0, 0, 0.28);
+  border-color: rgba(255, 0, 0, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255, 0, 0, 0.25);
+  color: #ff4444;
+}
+
+/* ─── No API Key Banner ─────────────────────────────────────────────── */
+.yt-no-key-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--amber);
+  font-size: 13px;
+  margin-left: auto;
+}
+.yt-no-key-banner code {
+  background: rgba(245, 158, 11, 0.15);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ─── YouTube results section label ────────────────────────────────── */
+.yt-results-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+.yt-results-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+

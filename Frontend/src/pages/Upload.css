@@ -1,0 +1,58 @@
+.upload-page { max-width: 800px; }
+
+.upload-form { display: flex; flex-direction: column; gap: 24px; }
+
+/* Drop zone */
+.upload-dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-xl);
+  padding: 60px 24px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: border-color var(--transition), background var(--transition);
+  background: var(--bg-card);
+  text-align: center;
+}
+.upload-dropzone:hover, .upload-dropzone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.upload-dropzone.has-file { padding: 20px 24px; }
+
+.upload-dropzone-content { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.upload-dropzone-icon { font-size: 52px; line-height: 1; }
+.upload-dropzone-label { font-size: 16px; font-weight: 600; }
+
+.upload-file-selected { display: flex; align-items: center; gap: 16px; width: 100%; }
+.upload-file-icon { font-size: 32px; }
+.upload-file-name { font-size: 14px; font-weight: 600; word-break: break-all; }
+
+/* Fields */
+.upload-fields { display: flex; flex-direction: column; gap: 20px; }
+
+/* Thumbnail picker */
+.upload-thumb-picker {
+  aspect-ratio: 16/9; max-width: 320px;
+  border: 2px dashed var(--border); border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; overflow: hidden;
+  background: var(--bg-card);
+  transition: border-color var(--transition), background var(--transition);
+}
+.upload-thumb-picker:hover {
+  border-color: var(--accent); background: var(--accent-soft);
+}
+.thumb-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.thumb-preview { width: 100%; height: 100%; object-fit: cover; }
+
+/* Progress bar */
+.upload-progress-wrap { display: flex; flex-direction: column; gap: 8px; }
+.upload-progress-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+.upload-progress-bar {
+  height: 6px; border-radius: 99px;
+  background: var(--bg-input); overflow: hidden;
+}
+.upload-progress-fill {
+  height: 100%; background: linear-gradient(to right, var(--accent), #a78bfa);
+  border-radius: 99px; transition: width 0.3s ease;
+  box-shadow: 0 0 8px var(--accent-glow);
+}

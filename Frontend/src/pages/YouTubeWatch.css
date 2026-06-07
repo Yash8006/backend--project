@@ -1,0 +1,207 @@
+/* ── YouTube Watch Page ─────────────────────────────────────────────────── */
+
+.yt-watch-page {
+  padding: var(--spacing-4) var(--spacing-6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Player ────────────────────────────────────────────────────────────── */
+
+.yt-player-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* The IFrame API mounts inside this div — it creates an <iframe> child */
+.yt-player {
+  width: 100%;
+  height: 100%;
+}
+
+/* Override the iframe YouTube creates so it fills the container */
+.yt-player iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+  display: block;
+}
+
+/* ── Title row ─────────────────────────────────────────────────────────── */
+
+.yt-watch-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.yt-open-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  color: #ff0000;
+  border-color: rgba(255, 0, 0, 0.3);
+  transition: background 0.2s, border-color 0.2s;
+}
+.yt-open-badge:hover {
+  background: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.6);
+}
+
+/* ── Channel avatar for YouTube channels ───────────────────────────────── */
+
+.yt-channel-avatar-lg {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff0000, #cc0000);
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── History saved badge ───────────────────────────────────────────────── */
+
+.yt-history-saved-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--success, #22c55e);
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: var(--radius-full, 9999px);
+  padding: 4px 10px;
+  margin-top: 8px;
+  animation: yt-badge-pop 0.3s ease;
+}
+
+@keyframes yt-badge-pop {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Description ───────────────────────────────────────────────────────── */
+
+.yt-description-details {
+  margin-top: 12px;
+  cursor: default;
+}
+
+.yt-description-summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  user-select: none;
+}
+.yt-description-summary::-webkit-details-marker { display: none; }
+.yt-description-summary::before {
+  content: '▶';
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+details[open] .yt-description-summary::before {
+  transform: rotate(90deg);
+}
+
+/* ── Related cards in sidebar ──────────────────────────────────────────── */
+
+.yt-related-card {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.yt-related-card:hover {
+  background: var(--surface-hover, rgba(255,255,255,0.05));
+}
+
+.yt-related-thumb-wrap {
+  position: relative;
+  width: 120px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--surface-2, #1a1a1a);
+}
+
+.yt-related-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.yt-badge-sm {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #ff0000;
+  border-radius: 3px;
+  width: 18px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yt-related-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.yt-related-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .yt-watch-page {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .yt-watch-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .yt-related-thumb-wrap {
+    width: 100px;
+  }
+}
