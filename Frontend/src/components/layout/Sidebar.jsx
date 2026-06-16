@@ -19,14 +19,17 @@ const navItems = [
     ), public: false,
   },
   {
-    label: 'Dashboard', to: '/dashboard', icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    label: 'Playlists', to: '/playlists', icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
     ), public: false,
   },
+];
+
+const ytNavItems = [
   {
-    label: 'Upload', to: '/upload', icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    ), public: false,
+    label: 'YT Subscriptions', to: '/yt-subscriptions', icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    ),
   },
 ];
 
@@ -54,17 +57,24 @@ export default function Sidebar({ open }) {
           })}
         </div>
 
+        {/* ── YouTube Section ──────────────────────────────────── */}
         {user && (
           <div className="sidebar-section">
-            <p className="sidebar-section-label">Your Channel</p>
-            <NavLink
-              to={`/channel/${user.username}`}
-              className={({ isActive }) => `sidebar-item ${isActive ? 'sidebar-item-active' : ''}`}
-              id="sidebar-my-channel"
-            >
-              <img src={user.avatar} alt={user.username} className="avatar avatar-sm" />
-              <span className="sidebar-item-label">{user.fullName}</span>
-            </NavLink>
+            <p className="sidebar-section-label" style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#ff0000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.06 12.06 0 0 0-8.6 0A4.83 4.83 0 0 1 3.45 6.7C2.28 8.35 2 10.13 2 12s.29 3.65 1.45 5.31a4.83 4.83 0 0 1 3.77 2.75 12.06 12.06 0 0 0 8.6 0 4.83 4.83 0 0 1 3.77-2.75C20.72 15.65 21 13.87 21 12s-.28-3.65-1.41-5.31zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+              YouTube
+            </p>
+            {ytNavItems.map(item => (
+              <NavLink
+                key={item.to + item.label}
+                to={item.to}
+                className={({ isActive }) => `sidebar-item ${isActive ? 'sidebar-item-active' : ''}`}
+                id={`sidebar-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+              >
+                <span className="sidebar-item-icon">{item.icon}</span>
+                <span className="sidebar-item-label">{item.label}</span>
+              </NavLink>
+            ))}
           </div>
         )}
       </nav>

@@ -71,6 +71,13 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.yt-channel-avatar-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ── History saved badge ───────────────────────────────────────────────── */
@@ -205,3 +212,261 @@ details[open] .yt-description-summary::before {
     width: 100px;
   }
 }
+
+/* ── Subscribe Button ───────────────────────────────────────────────────── */
+
+.watch-channel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.yt-subscribe-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  background: #ff0000;
+  color: #fff;
+}
+
+.yt-subscribe-btn:hover:not(:disabled) {
+  background: #cc0000;
+  transform: scale(1.03);
+}
+
+.yt-subscribe-btn.subscribed {
+  background: var(--surface-2, rgba(255,255,255,0.08));
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.yt-subscribe-btn.subscribed:hover:not(:disabled) {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.4);
+  color: #ef4444;
+}
+
+.yt-subscribe-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── Like / Dislike Actions ─────────────────────────────────────────────── */
+
+.yt-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.yt-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface-2, rgba(255,255,255,0.05));
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.yt-action-btn:hover:not(:disabled) {
+  background: var(--surface-hover, rgba(255,255,255,0.1));
+  transform: scale(1.03);
+}
+
+.yt-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.yt-action-btn.active-like {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.5);
+  color: #a78bfa;
+}
+
+.yt-action-btn.active-like svg {
+  animation: pop-bounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.yt-action-btn.active-dislike {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+.yt-action-btn.active-dislike svg {
+  animation: pop-bounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes pop-bounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.35) rotate(-10deg); }
+  65% { transform: scale(0.88) rotate(5deg); }
+  100% { transform: scale(1); }
+}
+
+/* ── Spinner for buttons ────────────────────────────────────────────────── */
+
+.yt-btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin-sm 0.7s linear infinite;
+}
+
+@keyframes spin-sm {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Comments Section ───────────────────────────────────────────────────── */
+
+.yt-comments-section {
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+.yt-comments-heading {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+/* Comment form */
+.yt-comment-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.yt-comment-avatar {
+  flex-shrink: 0;
+}
+
+.yt-comment-input-wrap {
+  flex: 1;
+}
+
+.yt-comment-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border);
+  background: var(--bg-input, rgba(255,255,255,0.05));
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.yt-comment-input:focus {
+  outline: none;
+  border-color: var(--accent, #7c3aed);
+  box-shadow: 0 0 0 3px var(--accent-soft, rgba(124,58,237,0.15));
+}
+
+.yt-comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Comment list */
+.yt-comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.yt-comment-item {
+  display: flex;
+  gap: 10px;
+  animation: comment-fade 0.25s ease;
+}
+
+@keyframes comment-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.yt-comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.yt-comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.yt-comment-author {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.yt-comment-time {
+  font-size: 12px;
+}
+
+.yt-comment-likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.yt-comment-text {
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+  word-break: break-word;
+}
+
+/* Skeleton loading */
+.yt-comments-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.yt-comment-skeleton {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+/* Load more */
+.yt-load-more {
+  margin: 8px auto 0;
+  display: block;
+  width: fit-content;
+}
+

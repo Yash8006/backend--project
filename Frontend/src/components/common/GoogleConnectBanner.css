@@ -1,0 +1,58 @@
+.gcb-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.08), rgba(234, 67, 53, 0.06));
+  border: 1px solid rgba(66, 133, 244, 0.2);
+  border-radius: 12px;
+  animation: gcb-slide-in 0.3s ease;
+}
+
+@keyframes gcb-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.gcb-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.gcb-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.gcb-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.gcb-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.gcb-btn {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(135deg, #4285F4, #34A853);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.gcb-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+}

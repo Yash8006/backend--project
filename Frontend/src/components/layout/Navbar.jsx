@@ -54,36 +54,31 @@ export default function Navbar({ onMenuToggle }) {
         </Link>
       </div>
 
-      <form className="navbar-search" onSubmit={handleSearch} role="search">
-        <div className="search-input-wrap">
-          <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input
-            id="search-input"
-            type="search"
-            className="search-input"
-            placeholder="Search videos..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            aria-label="Search videos"
-          />
-        </div>
-        <button id="search-btn" type="submit" className="btn btn-ghost btn-sm search-btn" aria-label="Submit search">
-          Search
-        </button>
-      </form>
+      {location.pathname !== '/' && (
+        <form className="navbar-search" onSubmit={handleSearch} role="search">
+          <div className="search-input-wrap">
+            <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+              id="search-input"
+              type="search"
+              className="search-input"
+              placeholder="Search videos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search videos"
+            />
+          </div>
+          <button id="search-btn" type="submit" className="btn btn-ghost btn-sm search-btn" aria-label="Submit search">
+            Search
+          </button>
+        </form>
+      )}
 
       <div className="navbar-right">
         {user ? (
           <>
-            <Link to="/upload" id="upload-nav-btn" className="btn btn-primary btn-sm">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-              Upload
-            </Link>
-
             <div className="navbar-user" ref={dropdownRef}>
               <button
                 id="user-menu-btn"
@@ -109,14 +104,6 @@ export default function Navbar({ onMenuToggle }) {
                     </div>
                   </div>
                   <hr className="divider" />
-                  <Link to={`/channel/${user.username}`} className="dropdown-item" role="menuitem" onClick={() => setDropdownOpen(false)}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                    My Channel
-                  </Link>
-                  <Link to="/dashboard" className="dropdown-item" role="menuitem" onClick={() => setDropdownOpen(false)}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                    Dashboard
-                  </Link>
                   <Link to="/history" className="dropdown-item" role="menuitem" onClick={() => setDropdownOpen(false)}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     Watch History
@@ -136,8 +123,7 @@ export default function Navbar({ onMenuToggle }) {
           </>
         ) : (
           <div className="auth-buttons">
-            <Link to="/login" id="login-nav-btn" className="btn btn-ghost btn-sm">Log in</Link>
-            <Link to="/register" id="register-nav-btn" className="btn btn-primary btn-sm">Sign up</Link>
+            <Link to="/login" id="login-nav-btn" className="btn btn-primary btn-sm">Log in</Link>
           </div>
         )}
       </div>

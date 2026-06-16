@@ -120,6 +120,9 @@ export const authAPI = {
   clearYouTubeHistory: () =>
     apiFetch('/users/yt-watch-history', { method: 'DELETE' }),
 
+  removeFromYouTubeHistory: (youtubeId) =>
+    apiFetch(`/users/yt-watch-history/${encodeURIComponent(youtubeId)}`, { method: 'DELETE' }),
+
   changePassword: (body) =>
     apiFetch('/users/change-password', { method: 'POST', body: JSON.stringify(body) }),
 };
@@ -214,12 +217,71 @@ export const playlistAPI = {
   delete: (playlistId) =>
     apiFetch(`/playlists/${playlistId}`, { method: 'DELETE' }),
 
-  addVideo: (playlistId, videoId) =>
-    apiFetch(`/playlists/add/${videoId}/${playlistId}`, { method: 'PATCH' }),
+  // videoMeta: { title, thumbnail, channelTitle, channelId }
+  addVideo: (playlistId, youtubeId, videoMeta = {}) =>
+    apiFetch(`/playlists/add/${encodeURIComponent(youtubeId)}/${playlistId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(videoMeta),
+    }),
 
-  removeVideo: (playlistId, videoId) =>
-    apiFetch(`/playlists/remove/${videoId}/${playlistId}`, { method: 'PATCH' }),
+  removeVideo: (playlistId, youtubeId) =>
+    apiFetch(`/playlists/remove/${encodeURIComponent(youtubeId)}/${playlistId}`, { method: 'PATCH' }),
 
   getUserPlaylists: (userId) =>
     apiFetch(`/playlists/user/${userId}`),
 };
+
+// ─── YouTube Interaction (proxied via backend) ────────────────────────────────
+// These require the user to have connected their Google/YouTube account.
+// Tokens are stored server-side; browser never sees the YouTube OAuth token.
+
+export const ytInteractAPI = {
+  // Check if the user's YouTube account is connected
+  getStatus: () =>
+    apiFetch('/auth/youtube-status'),
+
+  // Like / Dislike / Remove rating   rating: 'like' | 'dislike' | 'none'
+  rate: (videoId, rating) =>
+    apiFetch('/auth/yt/like', { method: 'POST', body: JSON.stringify({ videoId, rating }) }),
+
+  // Get the current user's rating for a video
+  getRating: (videoId) =>
+    apiFetch(`/auth/yt/rating?videoId=${encodeURIComponent(videoId)}`),
+
+  // Get comments for a video (paginated)
+  getComments: (videoId, pageToken = '') =>
+    apiFetch(`/auth/yt/comments?videoId=${encodeURIComponent(videoId)}${pageToken ? `&pageToken=${pageToken}` : ''}`),
+
+  // Post a new top-level comment
+  postComment: (videoId, text) =>
+    apiFetch('/auth/yt/comment', { method: 'POST', body: JSON.stringify({ videoId, text }) }),
+
+  // Subscribe (subscribed=true) or Unsubscribe (subscribed=false)
+  toggleSubscription: (channelId, subscribed) =>
+    apiFetch('/auth/yt/subscribe', { method: 'POST', body: JSON.stringify({ channelId, subscribed }) }),
+
+  // Check subscription status
+  checkSubscription: (channelId) =>
+    apiFetch(`/auth/yt/subscription?channelId=${encodeURIComponent(channelId)}`),
+
+  // Get user's liked YouTube videos (from YouTube's "LL" playlist)
+  getLikedVideos: (pageToken = '') =>
+    apiFetch(`/auth/yt/liked-videos?maxResults=24${pageToken ? `&pageToken=${pageToken}` : ''}`),
+
+  // Get channels the user is subscribed to on YouTube
+  getSubscriptions: (pageToken = '') =>
+    apiFetch(`/auth/yt/subscriptions?maxResults=24${pageToken ? `&pageToken=${pageToken}` : ''}`),
+
+  // Search YouTube videos via backend proxy (to bypass referrer restrictions)
+  search: (query, key, pageToken = '') =>
+    apiFetch(`/auth/yt/search?q=${encodeURIComponent(query)}&key=${encodeURIComponent(key)}${pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : ''}`),
+
+  // Get channel stats and details via backend proxy
+  getChannelStats: (channelId, key) =>
+    apiFetch(`/auth/yt/channel-stats?channelId=${encodeURIComponent(channelId)}&key=${encodeURIComponent(key)}`),
+
+  // Get logged-in user's own YouTube channel stats
+  getMyChannelStats: () =>
+    apiFetch('/auth/yt/my-channel-stats'),
+};
+

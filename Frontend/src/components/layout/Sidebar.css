@@ -36,6 +36,9 @@
   transition: height var(--transition);
 }
 .sidebar-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.sidebar-item:active {
+  transform: scale(0.96);
+}
 .sidebar-item-active {
   background: var(--accent-soft);
   color: #c4b5fd;

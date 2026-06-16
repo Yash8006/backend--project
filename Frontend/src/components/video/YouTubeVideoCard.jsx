@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import AddToPlaylistModal from '../playlist/AddToPlaylistModal';
 import './YouTubeVideoCard.css';
 
 function formatViews(count) {
@@ -25,7 +27,8 @@ function timeAgo(dateStr) {
 }
 
 export default function YouTubeVideoCard({ video }) {
-  const { id, snippet, statistics } = video;
+  const [showModal, setShowModal] = useState(false);
+  const { id, snippet, statistics, isProgress, progress, duration } = video;
   const videoId = typeof id === 'string' ? id : id?.videoId;
   const title = snippet?.title || 'Untitled';
   const channelTitle = snippet?.channelTitle || '';
@@ -40,71 +43,109 @@ export default function YouTubeVideoCard({ video }) {
   const channelUrl = `https://www.youtube.com/channel/${snippet?.channelId}`;
 
   return (
-    <article className="yt-video-card card">
-      <Link
-        to={`/yt-watch/${videoId}`}
-        state={{ snippet, statistics }}
-        id={`yt-video-${videoId}`}
-        className="yt-video-thumb-link"
-      >
-        <div className="yt-video-thumb-wrap">
-          <img
-            src={thumbnail}
-            alt={title}
-            className="yt-video-thumb"
-            loading="lazy"
-          />
-          <div className="yt-video-play-overlay">
-            <span className="yt-play-icon-circle">▶</span>
-          </div>
-          {/* YouTube badge */}
-          <span className="yt-badge">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.06 12.06 0 0 0-8.6 0A4.83 4.83 0 0 1 3.45 6.7C2.28 8.35 2 10.13 2 12s.29 3.65 1.45 5.31a4.83 4.83 0 0 1 3.77 2.75 12.06 12.06 0 0 0 8.6 0 4.83 4.83 0 0 1 3.77-2.75C20.72 15.65 21 13.87 21 12s-.28-3.65-1.41-5.31zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
-            </svg>
-            YouTube
-          </span>
-        </div>
-      </Link>
-
-      <div className="yt-video-info">
-        <a
-          href={channelUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="yt-channel-avatar-link"
-          aria-label={channelTitle}
+    <>
+      <article className="yt-video-card card">
+        <Link
+          to={`/yt-watch/${videoId}`}
+          state={{ snippet, statistics }}
+          id={`yt-video-${videoId}`}
+          className="yt-video-thumb-link"
         >
-          <div className="yt-channel-avatar">
-            {channelTitle.charAt(0).toUpperCase()}
+          <div className="yt-video-thumb-wrap">
+            <img
+              src={thumbnail}
+              alt={title}
+              className="yt-video-thumb"
+              loading="lazy"
+            />
+            <div className="yt-video-play-overlay">
+              <span className="yt-play-icon-circle">▶</span>
+            </div>
+            <button
+              className="ph-video-card-save-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowModal(true);
+              }}
+              title="Save to playlist"
+            >
+              <span>⊕</span> Save
+            </button>
+            {/* YouTube badge */}
+            <span className="yt-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.06 12.06 0 0 0-8.6 0A4.83 4.83 0 0 1 3.45 6.7C2.28 8.35 2 10.13 2 12s.29 3.65 1.45 5.31a4.83 4.83 0 0 1 3.77 2.75 12.06 12.06 0 0 0 8.6 0 4.83 4.83 0 0 1 3.77-2.75C20.72 15.65 21 13.87 21 12s-.28-3.65-1.41-5.31zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
+              </svg>
+              YouTube
+            </span>
+            {isProgress && duration && (
+              <div className="yt-video-progress-bar-wrap">
+                <div 
+                  className="yt-video-progress-bar-fill" 
+                  style={{ width: `${Math.min(100, Math.max(0, (progress / duration) * 100))}%` }} 
+                />
+              </div>
+            )}
           </div>
-        </a>
+        </Link>
 
-        <div className="yt-video-meta">
-          <Link
-            to={`/yt-watch/${videoId}`}
-            state={{ snippet, statistics }}
-            className="yt-video-title"
-            title={title}
-          >
-            {title}
-          </Link>
+        <div className="yt-video-info">
           <a
             href={channelUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="yt-channel-name text-muted"
+            className="yt-channel-avatar-link"
+            aria-label={channelTitle}
           >
-            {channelTitle}
+            <div className="yt-channel-avatar">
+              {channelTitle.charAt(0).toUpperCase()}
+            </div>
           </a>
-          <p className="yt-video-stats text-muted">
-            {viewCount ? formatViews(viewCount) : ''}
-            {viewCount && publishedAt ? ' • ' : ''}
-            {publishedAt ? timeAgo(publishedAt) : ''}
-          </p>
+
+          <div className="yt-video-meta">
+            <Link
+              to={`/yt-watch/${videoId}`}
+              state={{ snippet, statistics }}
+              className="yt-video-title"
+              title={title}
+            >
+              {title}
+            </Link>
+            <a
+              href={channelUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="yt-channel-name text-muted"
+            >
+              {channelTitle}
+            </a>
+            <p className="yt-video-stats text-muted">
+              {isProgress ? (
+                <span className="yt-continue-label" style={{ color: 'var(--accent)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ display: 'inline-block' }}>
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Continue Watching
+                </span>
+              ) : (
+                <>
+                  {viewCount ? formatViews(viewCount) : ''}
+                  {viewCount && publishedAt ? ' • ' : ''}
+                  {publishedAt ? timeAgo(publishedAt) : ''}
+                </>
+              )}
+            </p>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+      {showModal && (
+        <AddToPlaylistModal
+          video={video}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+    </>
   );
 }
 

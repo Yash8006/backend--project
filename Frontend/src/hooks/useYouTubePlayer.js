@@ -22,6 +22,8 @@ export default function useYouTubePlayer({
   watchThresholdSeconds = 30,
   onWatchThreshold,
   onEnded,
+  onProgress,
+  startSeconds = 0,
 }) {
   const containerRef = useRef(null);
   const playerRef = useRef(null);
@@ -40,6 +42,20 @@ export default function useYouTubePlayer({
     stopTimer();
     timerRef.current = setInterval(() => {
       watchedSecondsRef.current += 1;
+
+      // Track playback progress
+      if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
+        try {
+          const currentTime = playerRef.current.getCurrentTime();
+          const duration = playerRef.current.getDuration();
+          if (currentTime && duration) {
+            onProgress?.(currentTime, duration);
+          }
+        } catch (e) {
+          // Playback query failed (usually happens during load state transitions)
+        }
+      }
+
       if (
         !thresholdFiredRef.current &&
         watchedSecondsRef.current >= watchThresholdSeconds
@@ -49,7 +65,7 @@ export default function useYouTubePlayer({
         onWatchThreshold?.();
       }
     }, 1000);
-  }, [watchThresholdSeconds, onWatchThreshold, stopTimer]);
+  }, [watchThresholdSeconds, onWatchThreshold, stopTimer, onProgress]);
 
   const handleStateChange = useCallback(
     (event) => {
@@ -114,6 +130,7 @@ export default function useYouTubePlayer({
           modestbranding: 1,  // Smaller YouTube logo
           fs: 1,              // Allow fullscreen
           playsinline: 1,     // iOS: play inline, not fullscreen
+          start: startSeconds,
         },
         events: {
           onStateChange: handleStateChange,
