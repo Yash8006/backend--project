@@ -1,7 +1,7 @@
 /* ── YouTube Watch Page ─────────────────────────────────────────────────── */
 
 .yt-watch-page {
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: 24px 32px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -198,9 +198,39 @@ details[open] .yt-description-summary::before {
 
 /* ── Responsive ────────────────────────────────────────────────────────── */
 
+/* ── Watch Page Layout ─────────────────────────────────────────────────── */
+.watch-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.watch-main {
+  min-width: 0;
+}
+
+.watch-sidebar {
+  min-width: 0;
+}
+
+.watch-sidebar-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+@media (max-width: 1000px) {
+  .watch-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
 @media (max-width: 768px) {
   .yt-watch-page {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 16px 12px;
   }
 
   .yt-watch-title-row {

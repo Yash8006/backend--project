@@ -426,3 +426,10 @@ textarea.form-input { resize: vertical; min-height: 96px; }
   border-color: rgba(124, 58, 237, 1);
 }
 
+@media (max-width: 768px) {
+  .ph-video-card-save-btn {
+    opacity: 1 !important;
+  }
+}
+
+

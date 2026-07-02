@@ -16,10 +16,17 @@
 }
 
 /* Left */
-.navbar-left { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
 
 .navbar-menu-btn {
-  display: flex; align-items: center; justify-content: center;
+  display: none; /* Hide on desktop/laptop */
+  align-items: center; justify-content: center;
   width: 36px; height: 36px; border-radius: var(--radius-md);
   background: transparent;
   transition: background var(--transition);
@@ -52,11 +59,12 @@
 
 /* Search */
 .navbar-search {
-  flex: 1;
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
   max-width: 600px;
+  margin: 0 auto;
 }
 
 .search-input-wrap {
@@ -83,7 +91,15 @@
 .search-btn { flex-shrink: 0; }
 
 /* Right */
-.navbar-right { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 0;
+}
 .auth-buttons { display: flex; align-items: center; gap: 8px; }
 
 /* User avatar button */
@@ -134,8 +150,44 @@
 .dropdown-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
 .dropdown-item-danger:hover { color: var(--red); }
 
+@media (max-width: 900px) {
+  .navbar-menu-btn {
+    display: flex; /* Show on mobile/tablet viewports where sidebar is collapsed */
+  }
+}
+
 @media (max-width: 640px) {
-  .navbar-search { max-width: none; }
+  .navbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .navbar-left {
+    gap: 8px;
+    flex: none;
+  }
+  .navbar-right {
+    flex: none;
+    margin-left: auto;
+  }
+  .navbar-search {
+    max-width: none;
+    min-width: 0;
+    flex: 1;
+    margin: 0;
+  }
+  .search-input-wrap {
+    min-width: 0;
+  }
+  .search-input {
+    padding: 8px 12px 8px 32px;
+    font-size: 13px;
+  }
+  .search-icon {
+    left: 10px;
+    width: 14px;
+    height: 14px;
+  }
   .search-btn { display: none; }
   .logo-text { display: none; }
 }
+

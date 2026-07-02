@@ -30,18 +30,37 @@ const userSchema = new mongoose.Schema({
     coverImage: {
         type: String,
     },
-    watchHistory: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Video",
+    // Separate array for YouTube videos — they are external (no ObjectId ref)
+    // Stored as embedded subdocuments to avoid a join
+    youtubeWatchHistory: [{
+        youtubeId:    { type: String, required: true },
+        title:        { type: String, default: '' },
+        thumbnail:    { type: String, default: '' },
+        channelTitle: { type: String, default: '' },
+        watchedAt:    { type: Date,   default: Date.now },
     }],
     password:{
         type: String,
-        required: [ true, "Password is required" ],
-
-    }, 
+        // Optional — Google OAuth users register without a password
+    },
     refreshToken: {
         type: String,
     },
+    // ── Google / YouTube OAuth ────────────────────────────────────────────
+    googleId: {
+        type:   String,
+        unique: true,
+        sparse: true, // index only applies when the field is set
+    },
+    authProvider: {
+        type:    String,
+        enum:    ['local', 'google'],
+        default: 'local',
+    },
+    // YouTube access/refresh tokens for write-API (like, comment, subscribe)
+    youtubeAccessToken:  { type: String },
+    youtubeRefreshToken: { type: String },
+    youtubeTokenExpiry:  { type: Date },
 
 
 
@@ -49,7 +68,8 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 userSchema.pre("save", async function(){
-    if(this.isModified("password")){
+    // Only hash if password is present and has changed
+    if(this.isModified("password") && this.password){
         this.password = await bcrypt.hash(this.password, 10);
     }
 });

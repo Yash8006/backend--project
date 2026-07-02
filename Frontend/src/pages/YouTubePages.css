@@ -294,14 +294,65 @@
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
+@media (max-width: 768px) {
+  .yt-liked-remove-btn,
+  .yt-history-remove-btn {
+    opacity: 1 !important;
+  }
+}
+
 @media (max-width: 640px) {
   .sub-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .sub-card {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    padding: 16px;
+    gap: 16px;
+    border-radius: var(--radius-md);
+  }
+  .sub-avatar-wrap {
+    margin-bottom: 0;
+  }
+  .sub-avatar, .sub-avatar-fallback {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+  }
+  .sub-info {
+    margin-bottom: 0;
+    flex: 1;
+    min-width: 0;
+  }
+  .sub-name {
+    font-size: 14px;
+  }
+  .sub-desc {
+    font-size: 12px;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: auto;
   }
   .sub-actions {
-    display: none; /* collapse on very small screens */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: auto;
+  }
+  .sub-visit-btn, .sub-unsubscribe-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    width: 100%;
+    text-align: center;
   }
 }
+
 
 /* ── YouTube History Card Wrapper & Button ── */
 .yt-history-card-wrapper {
