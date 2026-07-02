@@ -4,8 +4,9 @@
   "description": "a backend for a web application",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
-  },
+  "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
+  "start": "node -r dotenv/config --experimental-json-modules src/index.js"
+},
   "keywords": [],
   "author": "Yash Kumar Goyal",
   "license": "ISC",
