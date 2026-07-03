@@ -8,7 +8,7 @@ import jwt             from 'jsonwebtoken';
 const COOKIE_OPTIONS = {
     httpOnly: true,
     secure:   true,
-    sameSite: 'lax',
+    sameSite: 'none',
 };
 
 // ─── Helper: generate your app's JWT tokens ───────────────────────────────────

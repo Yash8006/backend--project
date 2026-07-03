@@ -18,7 +18,7 @@ app.use(session({
     secret:            process.env.SESSION_SECRET || process.env.ACCESS_TOKEN_SECRET,
     resave:            false,
     saveUninitialized: false,
-    cookie:            { secure: false, maxAge: 5 * 60 * 1000 }, // 5 min — just for OAuth handshake
+    cookie:            { secure: true, sameSite: 'none', maxAge: 5 * 60 * 1000 }, // 5 min — just for OAuth handshake
 }));
 
 // Passport

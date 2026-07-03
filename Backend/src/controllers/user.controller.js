@@ -28,6 +28,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
+        sameSite: 'none',
     }
     return res.status(200) // Changed from 201 to 200 (OK) for logout
         .clearCookie("accessToken", options)
@@ -52,6 +53,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         const options = {
             httpOnly: true,
             secure: true,
+            sameSite: 'none',
         }
         // Fixed destructuring syntax
         const { accessToken, refreshToken: newrefreshToken } = await generateAndRefreshTokens(user._id);

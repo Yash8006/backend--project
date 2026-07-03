@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_BASE || '/api/v1';
+const BACKEND = import.meta.env.VITE_API_BACKEND || '';
+const BASE_URL = `${BACKEND}${import.meta.env.VITE_API_BASE || '/api/v1'}`;
 
 /**
  * Core fetch wrapper — handles JSON, credentials (cookies), and error responses.
