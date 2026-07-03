@@ -2,6 +2,13 @@
 
 A full-stack YouTube-like video streaming platform built with a **Node.js/Express backend** and a **React (Vite) frontend**.
 
+## 🌐 Live Demo
+
+| | Link |
+|---|---|
+| 🖥️ **Frontend** | [https://videotube-frontend-uim4.onrender.com](https://videotube-frontend-uim4.onrender.com) |
+| ⚙️ **Backend API** | [https://videotube-fbff.onrender.com](https://videotube-fbff.onrender.com) |
+
 ---
 
 ## 📁 Repository Structure
