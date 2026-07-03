@@ -432,4 +432,8 @@ textarea.form-input { resize: vertical; min-height: 96px; }
   }
 }
 
-
+/* ─── PWA Install Banner Animation ───────────────────────────────────────────── */
+@keyframes slideUp {
+  from { transform: translateX(-50%) translateY(120%); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}

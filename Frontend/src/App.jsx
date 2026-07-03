@@ -5,6 +5,7 @@ import { ToastProvider } from './context/ToastContext';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import InstallPWA from './components/common/InstallPWA';
 
 // Pages (lazy imports for code-splitting)
 import Home from './pages/Home';
@@ -85,6 +86,7 @@ export default function App() {
     <AuthProvider>
       <ToastProvider>
         <AppLayout />
+        <InstallPWA />
       </ToastProvider>
     </AuthProvider>
   );
