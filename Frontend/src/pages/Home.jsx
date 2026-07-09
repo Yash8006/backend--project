@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ytInteractAPI, authAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import YouTubeVideoCard, { YouTubeVideoCardSkeleton } from '../components/video/YouTubeVideoCard';
 import AddToPlaylistModal from '../components/playlist/AddToPlaylistModal';
 import { saveSearch, getSearchHistory } from '../utils/searchHistory';
@@ -41,6 +42,15 @@ function formatViews(count) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
   return `${n}`;
+}
+
+/** Detect if a video is likely a YouTube Short */
+function isLikelyShort(video) {
+  const title = (video?.snippet?.title || video?.title || '').toLowerCase();
+  // Check title for shorts markers
+  if (title.includes('#shorts') || title.includes('#short')) return true;
+  if (/\bshorts?\b/.test(title) && title.length < 60) return true;
+  return false;
 }
 
 
@@ -438,6 +448,7 @@ function VideoRow({ label, title, emoji, videos, loading, seeAllHref, seeAllLabe
 
 export default function Home() {
   const { user } = useAuth();
+  const { hideShorts } = useSettings();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('query') || '');
 
@@ -642,7 +653,7 @@ export default function Home() {
           <div className="video-grid">
             {searchLoading
               ? Array.from({ length: 8 }).map((_, i) => <YouTubeVideoCardSkeleton key={i} />)
-              : searchVideos.map((video, i) => (
+              : (hideShorts ? searchVideos.filter(v => !isLikelyShort(v)) : searchVideos).map((video, i) => (
                   <YouTubeVideoCard key={video.id?.videoId || video.id || i} video={video} />
                 ))
             }

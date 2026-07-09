@@ -2,10 +2,12 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useSettings } from '../context/SettingsContext';
 import { authAPI, ytInteractAPI } from '../api/client';
 import useYouTubePlayer from '../hooks/useYouTubePlayer';
 import GoogleConnectBanner from '../components/common/GoogleConnectBanner';
 import './YouTubeWatch.css';
+import './Settings.css';
 
 const YT_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
@@ -49,6 +51,20 @@ export default function YouTubeWatch() {
   const location       = useLocation();
   const { user }       = useAuth();
   const toast          = useToast();
+  const {
+    isCommentsBlocked,
+    blockVideoComments,
+    unblockVideoComments,
+    tempAllowComments,
+    getTempAllowExpiry,
+    commentTimeout,
+    commentBlockedVideos,
+  } = useSettings();
+
+  // Comment blocking state
+  const commentsBlocked = isCommentsBlocked(youtubeId);
+  const isVideoInBlockList = !!commentBlockedVideos[youtubeId];
+  const [countdown, setCountdown] = useState(null); // seconds remaining
 
   // ── Video metadata ───────────────────────────────────────────────────────
   const seedSnippet = location.state?.snippet    || null;
@@ -164,8 +180,54 @@ export default function YouTubeWatch() {
   }, [ytConnected, youtubeId]);
 
   useEffect(() => {
+    if (ytConnected && !commentsBlocked) loadComments('', true);
+  }, [ytConnected, loadComments, commentsBlocked]);
+
+  // ── Countdown timer for temp-allowed comments ─────────────────────────────
+  useEffect(() => {
+    const expiry = getTempAllowExpiry(youtubeId);
+    if (!expiry) {
+      setCountdown(null);
+      return;
+    }
+
+    const tick = () => {
+      const remaining = Math.max(0, Math.ceil((expiry - Date.now()) / 1000));
+      setCountdown(remaining);
+      if (remaining <= 0) setCountdown(null);
+    };
+
+    tick();
+    const intervalId = setInterval(tick, 1000);
+    return () => clearInterval(intervalId);
+  }, [getTempAllowExpiry, youtubeId, commentsBlocked]);
+
+  // Load comments when temp-allowed
+  useEffect(() => {
+    if (countdown !== null && countdown > 0 && ytConnected && comments.length === 0) {
+      loadComments('', true);
+    }
+  }, [countdown, ytConnected, comments.length, loadComments]);
+
+  const handleTempAllow = () => {
+    tempAllowComments(youtubeId);
     if (ytConnected) loadComments('', true);
-  }, [ytConnected, loadComments]);
+  };
+
+  const handleBlockToggle = () => {
+    if (isVideoInBlockList) {
+      unblockVideoComments(youtubeId);
+      toast.success('Comments unblocked for this video');
+    } else {
+      const meta = {
+        title: snippet?.title || 'Unknown Video',
+        thumbnail: snippet?.thumbnails?.medium?.url || snippet?.thumbnails?.default?.url || '',
+        channelTitle: snippet?.channelTitle || '',
+      };
+      blockVideoComments(youtubeId, meta);
+      toast.success('Comments blocked for this video');
+    }
+  };
 
   // ── Watch history ─────────────────────────────────────────────────────────
   const handleWatchThreshold = useCallback(() => {
@@ -438,6 +500,29 @@ export default function YouTubeWatch() {
               </div>
             )}
 
+            {/* ── Block/Unblock Comments Button ──────────────────────── */}
+            {!ytLoading && ytConnected && (
+              <div style={{ marginTop: 4 }}>
+                <button
+                  id="yt-block-comments-btn"
+                  className={`yt-block-comments-btn ${isVideoInBlockList ? 'unblock' : 'block'}`}
+                  onClick={handleBlockToggle}
+                >
+                  {isVideoInBlockList ? (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 1l22 22"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2c0 .76-.13 1.48-.35 2.16"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                      Unblock Comments
+                    </>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                      Block Comments
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
             {/* History save indicator */}
             {showSavedBadge && (
               <div className="yt-history-saved-badge">
@@ -460,9 +545,39 @@ export default function YouTubeWatch() {
             )}
 
             {/* ── Comments Section ─────────────────────────────────────── */}
-            {!ytLoading && ytConnected && (
+            {!ytLoading && ytConnected && commentsBlocked && (
+              <section className="yt-comments-section" aria-label="Comments blocked">
+                <h2 className="yt-comments-heading">Comments</h2>
+                <div className="yt-comments-blocked-banner">
+                  <h3>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                    Comments are blocked for this video
+                  </h3>
+                  <p>You've hidden comments for this video. You can temporarily view them or unblock permanently.</p>
+                  <div className="yt-comments-blocked-actions">
+                    <button className="yt-temp-view-btn" onClick={handleTempAllow} id="yt-temp-view-btn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      View for {commentTimeout === 30 ? '30s' : commentTimeout === 60 ? '1 min' : '2 min'}
+                    </button>
+                    <button className="yt-unblock-link-btn" onClick={() => { unblockVideoComments(youtubeId); toast.success('Comments unblocked'); }} id="yt-unblock-from-banner">
+                      Unblock permanently
+                    </button>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {!ytLoading && ytConnected && !commentsBlocked && (
               <section className="yt-comments-section" aria-label="Comments">
                 <h2 className="yt-comments-heading">Comments</h2>
+
+                {/* Countdown badge for temp-allowed */}
+                {countdown !== null && countdown > 0 && (
+                  <div className="yt-comment-countdown">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Comments will hide in {countdown}s
+                  </div>
+                )}
 
                 {/* Post a comment */}
                 <form

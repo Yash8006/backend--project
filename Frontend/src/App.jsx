@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { SettingsProvider } from './context/SettingsContext';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -17,6 +18,7 @@ import AuthCallback from './pages/AuthCallback';
 import YouTubeSubscriptions from './pages/YouTubeSubscriptions';
 import Playlists from './pages/Playlists';
 import PlaylistDetail from './pages/PlaylistDetail';
+import Settings from './pages/Settings';
 
 // Auth pages don't use the sidebar layout
 const AUTH_ROUTES = ['/login', '/register', '/auth/callback'];
@@ -67,6 +69,7 @@ function AppLayout() {
             <Route path="/liked" element={<ProtectedRoute><LikedVideos /></ProtectedRoute>} />
             <Route path="/playlists" element={<ProtectedRoute><Playlists /></ProtectedRoute>} />
             <Route path="/playlists/:playlistId" element={<ProtectedRoute><PlaylistDetail /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             {/* Fallback */}
             <Route path="*" element={
               <div style={{ textAlign: 'center', padding: '80px 20px' }}>
@@ -84,10 +87,12 @@ function AppLayout() {
 export default function App() {
   return (
     <AuthProvider>
-      <ToastProvider>
-        <AppLayout />
-        <InstallPWA />
-      </ToastProvider>
+      <SettingsProvider>
+        <ToastProvider>
+          <AppLayout />
+          <InstallPWA />
+        </ToastProvider>
+      </SettingsProvider>
     </AuthProvider>
   );
 }
