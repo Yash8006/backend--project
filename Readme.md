@@ -8,6 +8,7 @@ A full-stack YouTube-like video streaming platform built with a **Node.js/Expres
 |---|---|
 | 🖥️ **Frontend** | [https://videotube-frontend-uim4.onrender.com](https://videotube-frontend-uim4.onrender.com) |
 | ⚙️ **Backend API** | [https://videotube-fbff.onrender.com](https://videotube-fbff.onrender.com) |
+| 🎥 **Demo Video** | [Watch on Google Drive](https://drive.google.com/file/d/1Ac4ENhGZrJSyNldKQHc50_MNOqpYMnga/view?usp=drive_link) |
 
 ---
 

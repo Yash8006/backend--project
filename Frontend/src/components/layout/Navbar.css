@@ -55,7 +55,14 @@
   font-size: 14px; color: #fff;
   box-shadow: 0 2px 12px var(--accent-glow);
 }
-.logo-text { background: linear-gradient(135deg, #fff 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.logo-text {
+  color: #ffffff;
+  background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color-scheme: only dark;
+}
 
 /* Search */
 .navbar-search {

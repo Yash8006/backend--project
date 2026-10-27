@@ -33,11 +33,14 @@
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.035em;
-  margin: 0 0 12px;
-  background: linear-gradient(135deg, #ffffff 30%, #c084fc 100%);
+  margin: 0 auto 12px;
+  width: fit-content;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #e8d5ff 50%, #c084fc 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color-scheme: only dark;
 }
 
 .gemini-greeting-subtitle {

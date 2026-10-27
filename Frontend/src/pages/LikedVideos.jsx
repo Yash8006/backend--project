@@ -122,7 +122,7 @@ export default function LikedVideos() {
       setYtLoading(false);
       setLoadingMore(false);
     }
-  }, [ytConnected, toast]);
+  }, [ytConnected]);
 
   useEffect(() => {
     if (ytConnected) {
